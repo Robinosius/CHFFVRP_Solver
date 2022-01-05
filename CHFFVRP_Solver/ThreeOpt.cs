@@ -16,11 +16,15 @@ namespace CHFFVRP_Solver
             while (true)
             {
                 double delta = 0;
-                foreach(var segment in GetAllSegments(route.Count()))
+                foreach (var segment in GetAllSegments(route.Count() - 2)) // Routes start and end with depot, not include in 3opt!
                 {
                     int a = segment[0];
                     int b = segment[1];
                     int c = segment[3];
+
+                    // Reverse segment = traverse segment starting from the last element prior
+                    // Combinations: (reversed segments starting with a _):
+                    // abc, ab_c, a_bc, a_b_c, _abc. _ab:c, _a_b_c
                 }
             }
             return route;
@@ -37,7 +41,7 @@ namespace CHFFVRP_Solver
                 {
                     for (int k = j + 2; k < n; k++)
                     {
-                        segments.Add(new int[]{i, j, k});
+                        segments.Add(new int[]{i+1, j+1, k+1});
                     }
                 }
             }         

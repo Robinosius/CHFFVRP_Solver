@@ -20,6 +20,16 @@ namespace CHFFVRP_Solver
             this.emission = GetTotalEmission();
         }
 
+        public void InsertNode(Node node, int position)
+        {
+
+        }
+
+        public void RemoveNode(Node node, int position)
+        {
+
+        }
+
         public int Count()
         {
             return this.nodes.Count();
