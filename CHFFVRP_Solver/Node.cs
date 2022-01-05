@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace CHFFVRP_Solver
 {
-    class Node
+    public class Node
     {
         public int index; // unique index of node to get distances and other parameters from the problem
         public int x; // x coordinate

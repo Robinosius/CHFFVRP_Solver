@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace CHFFVRP_Solver
 {
-    class Vehicle
+    public class Vehicle
     {
         public int type; // type = number for simplicity
         public int capacity; // total capacity of this vehicle depending on its type

@@ -6,18 +6,23 @@ using System.Threading.Tasks;
 
 namespace CHFFVRP_Solver
 {
-    class Route
+    public class Route
     {
         public List<Node> nodes;
         public double distance; // total distance traveled on this route
         public double emission; // total emissions by vehicle serving this route
         public Vehicle vehicle;
         
-        public Route(List<Node> nodes)
+        public Route(List<Node> nodes, Vehicle vehicle)
         {
             this.nodes = nodes;
             this.distance = GetTotalDistance();
             this.emission = GetTotalEmission();
+        }
+
+        public int Count()
+        {
+            return this.nodes.Count();
         }
 
         public double GetTotalDistance()

@@ -53,7 +53,7 @@ At each assignment:
 
 namespace CHFFVRP_Solver
 {
-    class Problem
+    public class Problem
     {
         //parameters
         List<int> q_j; //demand at node
