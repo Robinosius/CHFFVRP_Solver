@@ -36,7 +36,7 @@ namespace CHFFVRP_Solver
             double e = 0;
             foreach(var route in routes)
             {
-                e += route.emission;
+                //e += route.emission;
             }
             this.emission = e;
         }

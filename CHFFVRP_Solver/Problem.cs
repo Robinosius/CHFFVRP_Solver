@@ -57,7 +57,7 @@ namespace CHFFVRP_Solver
     {
         //parameters
         List<int> q_j; //demand at node
-        int[,] nodes; //coordinates of nodes
+        int[,] coordinates; //coordinates of nodes
         double[,] d; //distance btw nodes
         List<int> v; //variable operation costs of vehicles
         List<int> Q; //capacity of type k vehicles
@@ -65,7 +65,12 @@ namespace CHFFVRP_Solver
         int ae; //upper limit for carb emissions
         int c; //net benefit of carbon trading
 
+        List<int> typeCount; // number of type k vehicles available
         List<Vehicle> vehicles; // fleet of heterogeneous vehicles available for the vrp
+
+        List<Node> nodes;
+
+        ThreeOpt tOpt;
 
         //variables
         bool[,,] x; // = 1 if a type k vehicle travels from node i to j, 0 otherwise
@@ -80,12 +85,15 @@ namespace CHFFVRP_Solver
             var tmp = input.GetRange(24, 16);
             q_j = tmp.Select(var => Int32.Parse(var.Split(" ")[1])).ToList();
             tmp = input.GetRange(7, 16);
-            nodes = new int[16,2];
+
+            coordinates = new int[16,2];
+            nodes = new();
             var index = 0;
             foreach(var line in tmp)
             {
-                nodes[index,0] = Int32.Parse(line.Split(" ")[1]);
-                nodes[index, 1] = Int32.Parse(line.Split(" ")[2]);
+                coordinates[index,0] = Int32.Parse(line.Split(" ")[1]); // x
+                coordinates[index, 1] = Int32.Parse(line.Split(" ")[2]); // y
+                nodes.Add(new Node(index, coordinates[index, 0], coordinates[index, 1], q_j[index]));
                 index++;
             }
             d = new double[16, 16];
@@ -93,10 +101,11 @@ namespace CHFFVRP_Solver
             {
                 for(int j = 0; j < 16; j++)
                 {
-                    d[i, j] = Math.Sqrt(Math.Pow(nodes[i,0] - nodes[j,0],2) + Math.Pow(nodes[i, 1] - nodes[j, 1], 2));
+                    d[i, j] = Math.Sqrt(Math.Pow(coordinates[i,0] - coordinates[j,0],2) + Math.Pow(coordinates[i, 1] - coordinates[j, 1], 2));
                     d[j, i] = d[i, j];
                 }
             }
+
             tmp = input.GetRange(54,3);
             v = tmp.Select(var => Int32.Parse(var.Split(" ")[1])).ToList();
             tmp = input.GetRange(50,3);
@@ -105,13 +114,31 @@ namespace CHFFVRP_Solver
             e = tmp.Select(var => Int32.Parse(var.Split(" ")[1])).ToList();
             ae = Int32.Parse(input[62]);
             c = Int32.Parse(input[64]);
-            Console.WriteLine();
+
+            // create vehicle fleet
+            tmp = input.GetRange(46, 3);
+            typeCount = tmp.Select(var => Int32.Parse(var.Split(" ")[1])).ToList();
+            CreateVehicles();
 
             x = new bool[16, 16, 3];
             load = new int[16,16];
             pc = 0;
+
+            tOpt = new(d);
         }
         #endregion
+
+        public void CreateVehicles()
+        {
+            this.vehicles = new();
+            for(int i = 0; i < typeCount.Count(); i++)
+            {
+                for(int j = 0; j < typeCount[i]; j++)
+                {
+                    vehicles.Add(new Vehicle(i, e[i], v[i], Q[i], nodes[0]));
+                }
+            }
+        }
 
         public double GetCost(Solution s)
         {

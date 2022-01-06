@@ -12,5 +12,13 @@ namespace CHFFVRP_Solver
         public int x; // x coordinate
         public int y; // y coordinate
         public int demand; // demand of goods at this node
+
+        public Node(int index, int x, int y, int demand)
+        {
+            this.index = index;
+            this.x = x;
+            this.y = y;
+            this.demand = demand;
+        }
     }
 }

@@ -14,5 +14,22 @@ namespace CHFFVRP_Solver
         public int emissions; // emissions per unit distance of this vehicle depending on its type
         public int variableCosts; // variable cost per unit distance "" "" "" ""
         public Route route; // route this vehicle is currently serving, routes start with tour Depot-Depot for simplicity
+    
+        public Vehicle(int type, int capacity, int emissions, int variableCosts, Node depot)
+        {
+            this.type = type;
+            this.capacity = capacity;
+            this.residualCapacity = 0;
+            this.emissions = emissions;
+            this.variableCosts = variableCosts;
+            this.route = new();
+            route.Add(depot);
+            route.Add(depot);
+        }
+
+        public double CalculateEmission()
+        {
+            return this.emissions * route.GetTotalDistance(); ;
+        }
     }
 }
