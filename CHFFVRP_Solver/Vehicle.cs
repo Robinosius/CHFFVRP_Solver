@@ -24,7 +24,6 @@ namespace CHFFVRP_Solver
             this.variableCosts = variableCosts;
             this.route = new();
             route.Add(depot);
-            route.Add(depot);
         }
 
         public double CalculateEmission()

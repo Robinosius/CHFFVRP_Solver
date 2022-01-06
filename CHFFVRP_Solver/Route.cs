@@ -56,6 +56,8 @@ namespace CHFFVRP_Solver
             {
                 distance += GetDistance(r[i - 1], r[i]);
             }
+            // from last node to depot
+            distance += GetDistance(r.Last(), r.First());
             return distance;
         }
 

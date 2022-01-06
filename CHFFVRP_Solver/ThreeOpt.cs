@@ -20,7 +20,7 @@ namespace CHFFVRP_Solver
             while (true)
             {
                 double delta = 0;
-                foreach(var segment in GetAllSegments(nodes.Count() - 2))
+                foreach(var segment in GetAllSegments(nodes.Count() - 1))
                 {
                     var newNodes = CheckSegments(nodes, segment[0], segment[1], segment[2]);
                     delta += GetTotalDistance(newNodes) - GetTotalDistance(nodes); //negative if improvement
@@ -45,7 +45,7 @@ namespace CHFFVRP_Solver
 
             List<Node> a = nodes.GetRange(i, j - i);
             List<Node> b = nodes.GetRange(j, k - j);
-            List<Node> c = nodes.GetRange(k, nodes.Count() - 1 - k);            
+            List<Node> c = nodes.GetRange(k, nodes.Count() - k).Concat(nodes.GetRange(0, i)).ToList();            
             List<Node> _a = new(a);
             _a.Reverse();            
             List<Node> _b = new(b);
@@ -76,6 +76,14 @@ namespace CHFFVRP_Solver
                 }
             }
 
+            //"rotate" list so that depot is at index 0 again
+            while(nodes[0].index != 0)
+            {
+                var first = nodes[0];
+                nodes.RemoveAt(0);
+                nodes.Add(first);
+            }
+
             // return minimum distance sequence
             return nodes;
         }
@@ -91,6 +99,12 @@ namespace CHFFVRP_Solver
                 {
                     for (int k = j + 2; k < n; k++)
                     {
+                        // if the first segment is 0, then the last segment must not start at the last node
+                        // otherwise the last segment would consist of only one node
+                        if(k == n - 1 && i == 0)
+                        {
+                            continue;
+                        }
                         segments.Add(new int[]{i+1, j+1, k+1}); // +1 because depot not included
                     }
                 }
@@ -110,6 +124,8 @@ namespace CHFFVRP_Solver
             {
                 d += GetDistance(nodes[i - 1], nodes[i]);
             }
+            // from last node back to depot
+            d += GetDistance(nodes.Last(), nodes.First());
             return d;
         }
     }
