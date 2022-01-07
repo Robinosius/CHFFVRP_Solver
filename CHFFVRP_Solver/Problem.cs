@@ -62,8 +62,8 @@ namespace CHFFVRP_Solver
         List<int> v; //variable operation costs of vehicles
         List<int> Q; //capacity of type k vehicles
         List<int> e; //emission of vehicles per distance
-        int ae; //upper limit for carb emissions
-        int c; //net benefit of carbon trading
+        double ae; //upper limit for carb emissions
+        double c; //net benefit of carbon trading
 
         List<int> typeCount; // number of type k vehicles available
         List<Vehicle> vehicles; // fleet of heterogeneous vehicles available for the vrp
@@ -113,8 +113,8 @@ namespace CHFFVRP_Solver
             Q = tmp.Select(var => Int32.Parse(var.Split(" ")[1])).ToList();
             tmp = input.GetRange(58, 3);
             e = tmp.Select(var => Int32.Parse(var.Split(" ")[1])).ToList();
-            ae = Int32.Parse(input[62]);
-            c = Int32.Parse(input[64]);
+            ae = Double.Parse(input[62]);
+            c = Double.Parse(input[64]);
 
             // create vehicle fleet
             tmp = input.GetRange(46, 3);
@@ -175,7 +175,7 @@ namespace CHFFVRP_Solver
                 Console.WriteLine(vehicle.route);
                 Console.WriteLine(vehicle.route.GetTotalDistance());
             }
-            Solution s = new(vehicles);
+            Solution s = new(vehicles, c, ae);
             return s;
         }
 
@@ -184,21 +184,6 @@ namespace CHFFVRP_Solver
             vehicle.route.nodes = vehicle.route.Count() >= 6 ? 
                 this.threeOpt.OptimizeThreeOpt(vehicle.route.nodes) 
                 : this.twoOpt.OptimizeTwoOpt(vehicle.route.nodes);
-        }
-
-        public double GetCost(Solution s)
-        {
-            return 0;
-        }
-
-        public bool CheckSolutionCandidate(Solution s)
-        {
-            return false;
-        }
-
-        public Route OptimizeThreeOpt(Route r)
-        {
-            return null;
         }
     }
 }

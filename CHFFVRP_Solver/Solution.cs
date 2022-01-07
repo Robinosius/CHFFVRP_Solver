@@ -17,12 +17,13 @@ namespace CHFFVRP_Solver
         private double tradingSaldo; // costs/benefit of carbon trading
         private double tradingCosts; // benefit/cost for selling/acquiring carbon emission rights
         private double carbonLimit; // limit for carbon emissions
-        private double totalCosts; 
+        private double totalCosts;
 
         public double Distance { get => distance; }
         public double Emission { get => emission; }
         public double RoutingCosts { get => routingCosts; }
         public double TradingSaldo { get => tradingSaldo; }
+        public double TotalCosts { get => totalCosts; }
 
         public Solution(List<Vehicle> vehicles, double tradingCosts, double carbonLimit)
         {
@@ -57,16 +58,17 @@ namespace CHFFVRP_Solver
 
         private void CalculateCosts()
         {
-            double variableCosts = 0;
+            routingCosts = 0;
 
             foreach(var vehicle in vehicles)
             {
-                variableCosts += vehicle.CalculateVariableCosts();
+                routingCosts += vehicle.CalculateVariableCosts();
             }
+
             // if saldo positive, emission rights need to be acquired for a price
             // if saldo negative, emission rights can be solved for a benefit
             this.tradingSaldo = tradingCosts * (this.emission - carbonLimit);
-            totalCosts = variableCosts + tradingSaldo;
+            totalCosts = routingCosts + tradingSaldo;
         }
     }
 }
