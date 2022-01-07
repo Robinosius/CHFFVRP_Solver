@@ -171,12 +171,19 @@ namespace CHFFVRP_Solver
                 Console.WriteLine($"Vehicle {vehicle}");
                 Console.WriteLine(vehicle.route);
                 Console.WriteLine(vehicle.route.GetTotalDistance());
-                vehicle.route.nodes = this.threeOpt.OptimizeThreeOpt(vehicle.route.nodes);
+                OptimizeVehicleRoute(vehicle);
                 Console.WriteLine(vehicle.route);
                 Console.WriteLine(vehicle.route.GetTotalDistance());
             }
             Solution s = new(vehicles);
             return s;
+        }
+
+        public void OptimizeVehicleRoute(Vehicle vehicle)
+        {
+            vehicle.route.nodes = vehicle.route.Count() >= 6 ? 
+                this.threeOpt.OptimizeThreeOpt(vehicle.route.nodes) 
+                : this.twoOpt.OptimizeTwoOpt(vehicle.route.nodes);
         }
 
         public double GetCost(Solution s)
