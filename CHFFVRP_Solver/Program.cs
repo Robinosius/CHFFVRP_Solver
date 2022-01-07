@@ -6,8 +6,15 @@ namespace CHFFVRP_Solver
     {
         static void Main(string[] args)
         {
+            var watch = new System.Diagnostics.Stopwatch();
+
+            watch.Start();
+
             var problem = new Problem();
             Solution s = problem.GetInitialSolution();
+
+            watch.Stop();
+            Console.WriteLine(watch.ElapsedMilliseconds);
             Console.ReadLine();
         }
     }

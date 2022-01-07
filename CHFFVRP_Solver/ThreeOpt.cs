@@ -21,7 +21,7 @@ namespace CHFFVRP_Solver
             {
                 double delta = 0;
                 // perform one 3 opt step
-                foreach(var segment in GetAllSegments(nodes.Count() - 1))
+                foreach(var segment in GetAllSegments(nodes.Count()))
                 {
                     var newNodes = CheckSegments(nodes, segment[0], segment[1], segment[2]);
                     delta += GetTotalDistance(newNodes) - GetTotalDistance(nodes); //negative if improvement
@@ -105,7 +105,7 @@ namespace CHFFVRP_Solver
                         {
                             continue;
                         }
-                        segments.Add(new int[]{i+1, j+1, k+1}); // +1 because depot not included
+                        segments.Add(new int[]{i, j, k}); // +1 because depot not included
                     }
                 }
             }         
@@ -114,7 +114,7 @@ namespace CHFFVRP_Solver
 
         public double GetDistance(Node a, Node b)
         {
-            return Math.Sqrt(Math.Pow(a.x - b.x, 2) + (Math.Pow(a.y - b.y, 2)));
+            return d[a.index, b.index];
         }
 
         public double GetTotalDistance(List<Node> nodes)

@@ -70,6 +70,7 @@ namespace CHFFVRP_Solver
 
         List<Node> nodes;
 
+        TwoOpt twoOpt;
         ThreeOpt threeOpt;
 
         //variables
@@ -124,6 +125,7 @@ namespace CHFFVRP_Solver
             load = new int[16,16];
             pc = 0;
 
+            twoOpt = new(d);
             threeOpt = new(d);
         }
         #endregion
