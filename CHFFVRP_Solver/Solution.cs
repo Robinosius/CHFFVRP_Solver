@@ -9,16 +9,29 @@ namespace CHFFVRP_Solver
     public class Solution
     {
         public List<Vehicle> vehicles;
-        public double distance; // total distance
-        public double emission; // total emissions
-        public double routingCosts; // costs related to vehicle routing (no carbon trading)
 
-        public Solution(List<Vehicle> vehicles)
+        // parameters
+        private double distance; // total distance
+        private double emission; // total emissions
+        private double routingCosts; // costs related to vehicle routing (no carbon trading)
+        private double tradingSaldo; // costs/benefit of carbon trading
+        private double tradingCosts; // benefit/cost for selling/acquiring carbon emission rights
+        private double carbonLimit; // limit for carbon emissions
+        private double totalCosts; 
+
+        public double Distance { get => distance; }
+        public double Emission { get => emission; }
+        public double RoutingCosts { get => routingCosts; }
+        public double TradingSaldo { get => tradingSaldo; }
+
+        public Solution(List<Vehicle> vehicles, double tradingCosts, double carbonLimit)
         {
             this.vehicles = vehicles;
+            this.tradingCosts = tradingCosts;
+            this.carbonLimit = carbonLimit;
             CalculateDistance();
-            CalculateCosts();
             CalculateEmission();
+            CalculateCosts();            
         }
 
         private void CalculateDistance()
@@ -44,7 +57,16 @@ namespace CHFFVRP_Solver
 
         private void CalculateCosts()
         {
+            double variableCosts = 0;
 
+            foreach(var vehicle in vehicles)
+            {
+                variableCosts += vehicle.CalculateVariableCosts();
+            }
+            // if saldo positive, emission rights need to be acquired for a price
+            // if saldo negative, emission rights can be solved for a benefit
+            this.tradingSaldo = tradingCosts * (this.emission - carbonLimit);
+            totalCosts = variableCosts + tradingSaldo;
         }
     }
 }
