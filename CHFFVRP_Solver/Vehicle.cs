@@ -8,13 +8,18 @@ namespace CHFFVRP_Solver
 {
     public class Vehicle
     {
-        public int type; // type = number for simplicity
-        public int capacity; // total capacity of this vehicle depending on its type
-        public int residualCapacity; // capacity left for this vehicle if it already serves customers;
+        private int type; // type = number for simplicity
+        private int capacity; // total capacity of this vehicle depending on its type
+        private int residualCapacity; // capacity left for this vehicle if it already serves customers;
         private int emissions; // emissions per unit distance of this vehicle depending on its type
         private int variableCosts; // variable cost per unit distance "" "" "" ""
-        public Route route; // route this vehicle is currently serving, routes start with tour Depot-Depot for simplicity
+        private Route route; // route this vehicle is currently serving, routes start with tour Depot-Depot for simplicity
     
+        public int Type { get => type; }
+        public int Capacity { get => capacity; }
+        public int ResidualCapacity { get => residualCapacity; }
+        public Route Route { get => route; }
+
         public Vehicle(int type, int capacity, int emissions, int variableCosts, Node depot)
         {
             this.type = type;
@@ -29,13 +34,19 @@ namespace CHFFVRP_Solver
         public void AddNode(Node node)
         {
             route.Add(node);
-            residualCapacity -= node.demand;
+            residualCapacity -= node.Demand;
         }
 
         public void InsertNode(int position, Node node)
         {
             route.InsertNode(position, node);
-            residualCapacity -= node.demand;
+            residualCapacity -= node.Demand;
+        }
+
+        public void RemoveNode(Node node)
+        {
+            this.route.RemoveNode(node);
+            this.residualCapacity -= node.Demand;
         }
 
         public double CalculateVariableCosts()

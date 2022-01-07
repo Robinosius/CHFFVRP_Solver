@@ -144,21 +144,21 @@ namespace CHFFVRP_Solver
 
         public Solution GetInitialSolution()
         {
-            List<Node> sorted = nodes.OrderBy(var => var.demand).ToList(); //customers sort by demand
-            vehicles = vehicles.OrderBy(var => var.capacity).ToList();
+            List<Node> sorted = nodes.OrderBy(var => var.Demand).ToList(); //customers sort by demand
+            vehicles = vehicles.OrderBy(var => var.Capacity).ToList();
 
             while(sorted.Count() > 1) //last remaining node is the depot
             {
                 var nextCustomer = sorted.Last();
                 // infeasible
-                if(nextCustomer.demand > vehicles.Last().capacity)
+                if(nextCustomer.Demand > vehicles.Last().Capacity)
                 {
                     Console.WriteLine("Problem infeasible: Max. vehicle capacity insufficient!");
                     return null;
                 }
                 for(int i = vehicles.Count() - 1; i >= 0; i--)
                 {
-                    if(vehicles[i].residualCapacity >= nextCustomer.demand)
+                    if(vehicles[i].ResidualCapacity >= nextCustomer.Demand)
                     {
                         vehicles[i].AddNode(nextCustomer);
                         sorted.Remove(nextCustomer);
@@ -169,11 +169,11 @@ namespace CHFFVRP_Solver
             foreach(var vehicle in vehicles)
             {
                 Console.WriteLine($"Vehicle {vehicle}");
-                Console.WriteLine(vehicle.route);
-                Console.WriteLine(vehicle.route.GetTotalDistance());
+                Console.WriteLine(vehicle.Route);
+                Console.WriteLine(vehicle.Route.GetTotalDistance());
                 OptimizeVehicleRoute(vehicle);
-                Console.WriteLine(vehicle.route);
-                Console.WriteLine(vehicle.route.GetTotalDistance());
+                Console.WriteLine(vehicle.Route);
+                Console.WriteLine(vehicle.Route.GetTotalDistance());
             }
             Solution s = new(vehicles, c, ae);
             return s;
@@ -181,9 +181,9 @@ namespace CHFFVRP_Solver
 
         public void OptimizeVehicleRoute(Vehicle vehicle)
         {
-            vehicle.route.nodes = vehicle.route.Count() >= 6 ? 
-                this.threeOpt.OptimizeThreeOpt(vehicle.route.nodes) 
-                : this.twoOpt.OptimizeTwoOpt(vehicle.route.nodes);
+            vehicle.Route.Nodes = vehicle.Route.Count() >= 6 ? 
+                this.threeOpt.OptimizeThreeOpt(vehicle.Route.Nodes) 
+                : this.twoOpt.OptimizeTwoOpt(vehicle.Route.Nodes);
         }
     }
 }

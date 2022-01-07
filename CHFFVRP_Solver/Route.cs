@@ -8,9 +8,12 @@ namespace CHFFVRP_Solver
 {
     public class Route
     {
-        public List<Node> nodes;
-        public double distance; // total distance traveled on this route
+        private List<Node> nodes;
+        private double distance; // total distance traveled on this route
         
+        public List<Node> Nodes { get => nodes; set => nodes = value; }
+        public double Distance { get => distance; }
+
         public Route()
         {
             this.nodes = new();
@@ -63,7 +66,7 @@ namespace CHFFVRP_Solver
 
         public double GetDistance(Node a, Node b)
         {
-            return Math.Sqrt(Math.Pow(a.x - b.x, 2) + (Math.Pow(a.y - b.y, 2)));
+            return Math.Sqrt(Math.Pow(a.X - b.X, 2) + (Math.Pow(a.Y - b.Y, 2)));
         }
 
         public override string ToString()
@@ -71,7 +74,7 @@ namespace CHFFVRP_Solver
             string s = "";
             foreach(var node in this.nodes)
             {
-                s += node.index.ToString() + " ";
+                s += node.Index.ToString() + " ";
             }
             return s;
         }

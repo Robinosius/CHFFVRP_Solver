@@ -77,7 +77,7 @@ namespace CHFFVRP_Solver
             }
 
             //"rotate" list so that depot is at index 0 again
-            while(nodes[0].index != 0)
+            while(nodes[0].Index != 0)
             {
                 var first = nodes[0];
                 nodes.RemoveAt(0);
@@ -114,7 +114,7 @@ namespace CHFFVRP_Solver
 
         public double GetDistance(Node a, Node b)
         {
-            return d[a.index, b.index];
+            return d[a.Index, b.Index];
         }
 
         public double GetTotalDistance(List<Node> nodes)

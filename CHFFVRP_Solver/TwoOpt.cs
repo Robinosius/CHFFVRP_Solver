@@ -44,7 +44,7 @@ namespace CHFFVRP_Solver
             if(GetTotalDistance(swapped) < GetTotalDistance(nodes))
             {
                 //"rotate" list so that depot is at index 0 again
-                while (swapped[0].index != 0)
+                while (swapped[0].Index != 0)
                 {
                     var first = swapped[0];
                     swapped.RemoveAt(0);
@@ -78,7 +78,7 @@ namespace CHFFVRP_Solver
 
         public double GetDistance(Node a, Node b)
         {
-            return d[a.index, b.index];
+            return d[a.Index, b.Index];
         }
 
         public double GetTotalDistance(List<Node> nodes)
