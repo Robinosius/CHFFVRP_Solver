@@ -19,11 +19,23 @@ namespace CHFFVRP_Solver
         {
             this.type = type;
             this.capacity = capacity;
-            this.residualCapacity = 0;
+            this.residualCapacity = capacity;
             this.emissions = emissions;
             this.variableCosts = variableCosts;
             this.route = new();
             route.Add(depot);
+        }
+
+        public void AddNode(Node node)
+        {
+            route.Add(node);
+            residualCapacity -= node.demand;
+        }
+
+        public void InsertNode(int position, Node node)
+        {
+            route.InsertNode(position, node);
+            residualCapacity -= node.demand;
         }
 
         public double CalculateEmission()

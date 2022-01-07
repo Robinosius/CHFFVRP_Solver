@@ -14,23 +14,23 @@ namespace CHFFVRP_Solver
         public Route()
         {
             this.nodes = new();
-            this.distance = GetTotalDistance();
         }
 
         public Route(List<Node> nodes)
         {
             this.nodes = nodes;
-            this.distance = GetTotalDistance();
         }
 
         public void Add(Node node)
         {
             this.nodes.Add(node);
+            GetTotalDistance();
         }
 
         public void InsertNode(int position, Node node)
         {
             this.nodes.Insert(position, node);
+            GetTotalDistance();
         }
 
         public void RemoveNode(Node node)
@@ -64,6 +64,16 @@ namespace CHFFVRP_Solver
         public double GetDistance(Node a, Node b)
         {
             return Math.Sqrt(Math.Pow(a.x - b.x, 2) + (Math.Pow(a.y - b.y, 2)));
+        }
+
+        public override string ToString()
+        {
+            string s = "";
+            foreach(var node in this.nodes)
+            {
+                s += node.index.ToString() + " ";
+            }
+            return s;
         }
     }
 }

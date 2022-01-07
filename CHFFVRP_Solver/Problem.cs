@@ -70,7 +70,7 @@ namespace CHFFVRP_Solver
 
         List<Node> nodes;
 
-        ThreeOpt tOpt;
+        ThreeOpt threeOpt;
 
         //variables
         bool[,,] x; // = 1 if a type k vehicle travels from node i to j, 0 otherwise
@@ -124,7 +124,7 @@ namespace CHFFVRP_Solver
             load = new int[16,16];
             pc = 0;
 
-            tOpt = new(d);
+            threeOpt = new(d);
         }
         #endregion
 
@@ -135,9 +135,46 @@ namespace CHFFVRP_Solver
             {
                 for(int j = 0; j < typeCount[i]; j++)
                 {
-                    vehicles.Add(new Vehicle(i, e[i], v[i], Q[i], nodes[0]));
+                    vehicles.Add(new Vehicle(i, Q[i], e[i], v[i], nodes[0]));
                 }
             }
+        }
+
+        public Solution GetInitialSolution()
+        {
+            List<Node> sorted = nodes.OrderBy(var => var.demand).ToList(); //customers sort by demand
+            vehicles = vehicles.OrderBy(var => var.capacity).ToList();
+
+            while(sorted.Count() > 1) //last remaining node is the depot
+            {
+                var nextCustomer = sorted.Last();
+                // infeasible
+                if(nextCustomer.demand > vehicles.Last().capacity)
+                {
+                    Console.WriteLine("Problem infeasible: Max. vehicle capacity insufficient!");
+                    return null;
+                }
+                for(int i = vehicles.Count() - 1; i >= 0; i--)
+                {
+                    if(vehicles[i].residualCapacity >= nextCustomer.demand)
+                    {
+                        vehicles[i].AddNode(nextCustomer);
+                        sorted.Remove(nextCustomer);
+                        break;
+                    }
+                }
+            }
+            foreach(var vehicle in vehicles)
+            {
+                Console.WriteLine($"Vehicle {vehicle}");
+                Console.WriteLine(vehicle.route);
+                Console.WriteLine(vehicle.route.GetTotalDistance());
+                vehicle.route.nodes = this.threeOpt.OptimizeThreeOpt(vehicle.route.nodes);
+                Console.WriteLine(vehicle.route);
+                Console.WriteLine(vehicle.route.GetTotalDistance());
+            }
+            Solution s = new(vehicles);
+            return s;
         }
 
         public double GetCost(Solution s)

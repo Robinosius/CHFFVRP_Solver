@@ -20,6 +20,7 @@ namespace CHFFVRP_Solver
             while (true)
             {
                 double delta = 0;
+                // perform one 3 opt step
                 foreach(var segment in GetAllSegments(nodes.Count() - 1))
                 {
                     var newNodes = CheckSegments(nodes, segment[0], segment[1], segment[2]);
@@ -45,6 +46,7 @@ namespace CHFFVRP_Solver
 
             List<Node> a = nodes.GetRange(i, j - i);
             List<Node> b = nodes.GetRange(j, k - j);
+            // add nodes before first segment to last one to assign all nodes to one of the three segments
             List<Node> c = nodes.GetRange(k, nodes.Count() - k).Concat(nodes.GetRange(0, i)).ToList();            
             List<Node> _a = new(a);
             _a.Reverse();            
@@ -65,8 +67,6 @@ namespace CHFFVRP_Solver
 
             foreach(var candidate in candidates)
             {
-                candidate.Insert(0, depot);
-                candidate.Add(depot);
                 if(GetTotalDistance(candidate) < GetTotalDistance(nodes))
                 {
                     List<Node> initialRoute = new();

@@ -8,14 +8,14 @@ namespace CHFFVRP_Solver
 {
     public class Solution
     {
-        public List<Route> routes;
+        public List<Vehicle> vehicles;
         public double distance; // total distance
         public double emission; // total emissions
-        public double costs; // total cost
+        public double routingCosts; // costs related to vehicle routing (no carbon trading)
 
-        public Solution(List<Route> routes)
+        public Solution(List<Vehicle> vehicles)
         {
-            this.routes = routes;
+            this.vehicles = vehicles;
             CalculateDistance();
             CalculateCosts();
             CalculateEmission();
@@ -24,6 +24,7 @@ namespace CHFFVRP_Solver
         private void CalculateDistance()
         {
             double d = 0;
+            var routes = vehicles.Select(var => var.route).ToList();
             foreach(var route in routes)
             {
                 d += route.distance;
@@ -34,9 +35,9 @@ namespace CHFFVRP_Solver
         private void CalculateEmission()
         {
             double e = 0;
-            foreach(var route in routes)
+            foreach (var vehicle in vehicles)
             {
-                //e += route.emission;
+                e += vehicle.CalculateEmission();
             }
             this.emission = e;
         }

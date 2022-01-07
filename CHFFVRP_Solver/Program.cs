@@ -7,7 +7,8 @@ namespace CHFFVRP_Solver
         static void Main(string[] args)
         {
             var problem = new Problem();
-
+            Solution s = problem.GetInitialSolution();
+            Console.ReadLine();
         }
     }
 }
