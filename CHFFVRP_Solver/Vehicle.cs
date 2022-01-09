@@ -31,6 +31,11 @@ namespace CHFFVRP_Solver
             route.Add(depot);
         }
 
+        public object Clone()
+        {
+            return this.MemberwiseClone();
+        }
+
         public void AddNode(Node node)
         {
             route.Add(node);
@@ -46,7 +51,7 @@ namespace CHFFVRP_Solver
         public void RemoveNode(Node node)
         {
             this.route.RemoveNode(node);
-            this.residualCapacity -= node.Demand;
+            this.residualCapacity += node.Demand;
         }
 
         public double CalculateVariableCosts()
@@ -56,7 +61,8 @@ namespace CHFFVRP_Solver
 
         public double CalculateEmission()
         {
-            return this.emissions * route.GetTotalDistance(); ;
+            var emissions = this.emissions * route.GetTotalDistance();
+            return emissions;
         }
     }
 }

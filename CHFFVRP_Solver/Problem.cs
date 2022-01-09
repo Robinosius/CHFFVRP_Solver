@@ -72,6 +72,7 @@ namespace CHFFVRP_Solver
 
         TwoOpt twoOpt;
         ThreeOpt threeOpt;
+        TabuSearch tabuSearch;
 
         //variables
         bool[,,] x; // = 1 if a type k vehicle travels from node i to j, 0 otherwise
@@ -127,6 +128,8 @@ namespace CHFFVRP_Solver
 
             twoOpt = new(d);
             threeOpt = new(d);
+            tabuSearch = new(10, 10, 300, twoOpt, threeOpt,
+                NeighborhoodGenerationMethod.Swap, Mode.Emission);
         }
         #endregion
 
@@ -177,6 +180,11 @@ namespace CHFFVRP_Solver
             }
             Solution s = new(vehicles, c, ae);
             return s;
+        }
+
+        public Solution StartTabuSearch(Solution initialSolution)
+        {
+            return tabuSearch.PerformTabuSearch(initialSolution);
         }
 
         public void OptimizeVehicleRoute(Vehicle vehicle)

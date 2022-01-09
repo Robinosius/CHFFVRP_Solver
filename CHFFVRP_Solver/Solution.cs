@@ -36,7 +36,12 @@ namespace CHFFVRP_Solver
             CalculateCosts();            
         }
 
-        private void CalculateDistance()
+        public Solution Clone()
+        {
+            return (Solution)this.MemberwiseClone();
+        }
+
+        public void CalculateDistance()
         {
             double d = 0;
             var routes = vehicles.Select(var => var.Route).ToList();
@@ -47,7 +52,7 @@ namespace CHFFVRP_Solver
             this.distance = d;
         }
 
-        private void CalculateEmission()
+        public void CalculateEmission()
         {
             double e = 0;
             foreach (var vehicle in vehicles)
@@ -57,7 +62,7 @@ namespace CHFFVRP_Solver
             this.emission = e;
         }
 
-        private void CalculateCosts()
+        public void CalculateCosts()
         {
             routingCosts = 0;
 
@@ -70,6 +75,13 @@ namespace CHFFVRP_Solver
             // if saldo negative, emission rights can be solved for a benefit
             this.tradingSaldo = tradingCosts * (this.emission - carbonLimit);
             totalCosts = routingCosts + tradingSaldo;
+        }
+
+        public override string ToString()
+        {
+            string s =
+                $"Cost:{this.TotalCosts} Distance:{this.Distance} Emissions:{this.Emission}";
+            return s;
         }
     }
 }

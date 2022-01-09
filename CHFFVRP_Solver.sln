@@ -5,7 +5,7 @@ VisualStudioVersion = 16.0.31729.503
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CHFFVRP_Solver", "CHFFVRP_Solver\CHFFVRP_Solver.csproj", "{4BB894B2-D5F2-4C2F-96B4-EA0B19CBCF16}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TabuSearchTests", "TabuSearchTests\TabuSearchTests.csproj", "{D57F33E2-E7E3-405F-A45E-0E412A28AFFC}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TabuSearchTests", "TabuSearchTests\TabuSearchTests.csproj", "{D57F33E2-E7E3-405F-A45E-0E412A28AFFC}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

@@ -12,9 +12,11 @@ namespace CHFFVRP_Solver
 
             var problem = new Problem();
             Solution s = problem.GetInitialSolution();
-
+            Console.WriteLine($"Initial result: {s}");
+            s = problem.StartTabuSearch(s);
             watch.Stop();
-            Console.WriteLine(watch.ElapsedMilliseconds);
+            Console.WriteLine($"Result: {s}");
+            Console.WriteLine($"Solving time: {watch.ElapsedMilliseconds}");
             Console.ReadLine();
         }
     }
