@@ -39,6 +39,7 @@ namespace CHFFVRP_Solver
         public void RemoveNode(Node node)
         {
             this.nodes.Remove(node);
+            GetTotalDistance();
         }
 
         public int Count()
