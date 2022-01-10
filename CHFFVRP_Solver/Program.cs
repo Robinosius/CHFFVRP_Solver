@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 
 namespace CHFFVRP_Solver
 {
@@ -7,7 +8,6 @@ namespace CHFFVRP_Solver
         static void Main(string[] args)
         {
             var watch = new System.Diagnostics.Stopwatch();
-
             watch.Start();
 
             var problem = new Problem();
@@ -17,6 +17,10 @@ namespace CHFFVRP_Solver
             watch.Stop();
             Console.WriteLine($"Result: {s}");
             Console.WriteLine($"Solving time: {watch.ElapsedMilliseconds}");
+            foreach(var vehicle in s.Vehicles)
+            {
+                Console.WriteLine(vehicle.Route);
+            }
             Console.ReadLine();
         }
     }

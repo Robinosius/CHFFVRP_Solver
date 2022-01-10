@@ -128,8 +128,8 @@ namespace CHFFVRP_Solver
 
             twoOpt = new(d);
             threeOpt = new(d);
-            tabuSearch = new(10, 10, 300, twoOpt, threeOpt,
-                NeighborhoodGenerationMethod.Swap, Mode.Emission);
+            tabuSearch = new(100, 10, 80, twoOpt, threeOpt,
+                NeighborhoodGenerationMethod.Insert, Mode.Emission);
         }
         #endregion
 

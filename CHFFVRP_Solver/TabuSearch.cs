@@ -41,9 +41,9 @@ namespace CHFFVRP_Solver
         {
             this.v1 = v1;
             this.v2 = v2;
-            this.index1 = index1;
+            this.index1 = index1; // route index of node 
             this.index2 = index2;
-            this.nodeId1 = nodeId1;
+            this.nodeId1 = nodeId1; // unique node index
             this.nodeId2 = nodeId2;
         }
     }
@@ -86,22 +86,21 @@ namespace CHFFVRP_Solver
 
         public Solution PerformTabuSearch(Solution s)
         {
-            Solution bestSolution = s;
+            Solution bestSolution = s.Clone(); // initial solution
             double iterCount = 0; //# of iterations without improvement
             while (iterCount < stopAfter)
             {
                 double oldScore = s.TotalCosts;
                 s = GetBestNeighborhoodSolution(s);
                 double newScore = s.TotalCosts;
-                if(s.TotalCosts < bestSolution.TotalCosts)
+                if(newScore < bestSolution.TotalCosts)
                 {
                     bestSolution = s.Clone();
-                    Console.WriteLine(bestSolution);
                 }
                 if(newScore < oldScore)
                 {
                     iterCount = 0;
-                    Console.WriteLine($"Score: {s.TotalCosts}");
+                    //Console.WriteLine($"Score: {s.TotalCosts}");
                 }
                 else
                 {
@@ -116,26 +115,36 @@ namespace CHFFVRP_Solver
             double bestDelta = Int32.MaxValue; // ensure that there is always a move instantiated
             Move highest = null; // best move
             // check neighborhood generation for each vehicle route
-            for(int i = 0; i < s.Vehicles.Count(); i++)
-            { 
-                for(int j = i + 1; j < s.Vehicles.Count(); j++)
+
+            for(int i = 0; i < s.Vehicles.Count(); i++) 
+            {
+                for (int j = 0; j < s.Vehicles.Count(); j++)
                 {
                     var v1 = s.Vehicles[i];
+
                     var v2 = s.Vehicles[j];
-                    for (int x = 1; x < v1.Route.Count(); x++) //start at 1, depot not included in neighbourhood generation
+                    if (i != j)
                     {
-                        var n1 = v1.Route.Nodes[x];
-                        for (int y = 1; y < v2.Route.Count(); y++)
+                        for (int x = 1; x < v1.Route.Count(); x++) //start at 1, depot not included in neighbourhood generation
                         {
-                            var n2 = v2.Route.Nodes[y];
-                            var delta = checkMove(v1, v2, x, y);
-                            if(delta < bestDelta && delta != 0 && !CheckTabu(v1,v2,n1.Index,n2.Index))
+
+                            var n1 = v1.Route.Nodes[x];
+                            var maxIndex = ngm == NeighborhoodGenerationMethod.Insert ? 1 : 0;
+                            for (int y = 1; y < v2.Route.Count() + maxIndex; y++)
                             {
-                                highest = new Move(v1, v2, x, y, n1.Index, n2.Index);
-                                bestDelta = delta;
+                                if(x < v1.Route.Count())
+                                {
+                                    int index2 = y == v2.Route.Count() ? -1 : v2.Route.Nodes[y].Index;
+                                    var delta = checkMove(v1, v2, x, y);
+                                    if (delta < bestDelta && delta != 0 && !CheckTabu(v1, v2, n1.Index, index2))
+                                    {
+                                        highest = new Move(s.Vehicles[i], s.Vehicles[j], x, y, n1.Index, index2);
+                                        bestDelta = delta;
+                                    }
+                                }                                
                             }
                         }
-                    }
+                    }                   
                         
                 }
             }
@@ -143,7 +152,13 @@ namespace CHFFVRP_Solver
             if(highest != null)
             {
                 // perform move with best result and add to tabu list
-                performMove(highest.V1, highest.V2, highest.Index1, highest.Index2);
+                try{
+                    performMove(highest.V1, highest.V2, highest.Index1, highest.Index2);
+                }
+                catch
+                {
+                }
+                
                 tabuList.Add(highest);
 
                 // optimize the two routes with 2-opt/3-opt
@@ -184,22 +199,42 @@ namespace CHFFVRP_Solver
         public double CheckMoveDistance(Vehicle v1, Vehicle v2, int i1, int i2)
         {
             double oldDistance = v1.Route.Distance + v2.Route.Distance;
-            var c1 = (Vehicle)v1.Clone();
-            var c2 = (Vehicle)v2.Clone();
-            performMove(c1, c2, i1, i2);
-            double newDistance = c1.Route.Distance + c2.Route.Distance;
+            performMove(v1, v2, i1, i2);
+
+            double newDistance = v1.Route.Distance + v2.Route.Distance;
+            if (ngm == NeighborhoodGenerationMethod.Swap)
+            {
+                // swap back
+                performMove(v1, v2, i1, i2);
+            }
+            else if (newDistance != oldDistance) // revert only if insertion actually happened
+            {
+                //insert node back to old position on old route
+                var tmp = v2.Route.Nodes[i2];
+                v2.RemoveNode(tmp);
+                v1.InsertNode(i1, tmp);
+            }
             return newDistance - oldDistance;
         }
 
         public double CheckMoveEmissions(Vehicle v1, Vehicle v2, int i1, int i2)
         {
-            //Console.WriteLine($"{v1.Route} {v1.Route.Distance} {v1.CalculateEmission()}");
-            //Console.WriteLine($"{v2.Route} {v2.Route.Distance} {v2.CalculateEmission()}");
             double oldEmission = v1.CalculateEmission() + v2.CalculateEmission();
-            var c1 = (Vehicle)v1.Clone();
-            var c2 = (Vehicle)v2.Clone();
-            performMove(c1, c2, i1, i2);
-            double newEmission = c1.CalculateEmission() + c2.CalculateEmission();
+            performMove(v1, v2, i1, i2);
+
+            double newEmission = v1.CalculateEmission() + v2.CalculateEmission();
+            if (ngm == NeighborhoodGenerationMethod.Swap)
+            {
+                // swap back
+                performMove(v1, v2, i1, i2);
+            }
+            else if(newEmission != oldEmission) // revert only if insertion actually happened
+            {
+                //insert node back to old position on old route
+                var tmp = v2.Route.Nodes[i2];
+                v2.RemoveNode(tmp);
+                v1.InsertNode(i1, tmp);
+            }
             return newEmission - oldEmission;
         }
 
