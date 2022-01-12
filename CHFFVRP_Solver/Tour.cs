@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace CHFFVRP_Solver
 {
-    public class Route
+    public class Tour
     {
         private List<Node> nodes;
         private double distance; // total distance traveled on this route
@@ -14,12 +14,12 @@ namespace CHFFVRP_Solver
         public List<Node> Nodes { get => nodes; set => nodes = value; }
         public double Distance { get => distance; }
 
-        public Route()
+        public Tour()
         {
             this.nodes = new();
         }
 
-        public Route(List<Node> nodes)
+        public Tour(List<Node> nodes)
         {
             this.nodes = nodes;
         }

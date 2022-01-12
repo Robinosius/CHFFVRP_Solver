@@ -128,7 +128,7 @@ namespace CHFFVRP_Solver
 
             twoOpt = new(d);
             threeOpt = new(d);
-            tabuSearch = new(100, 10, 80, twoOpt, threeOpt,
+            tabuSearch = new(150, 10, 30, twoOpt, threeOpt,
                 NeighborhoodGenerationMethod.Insert, Mode.Emission);
         }
         #endregion
@@ -172,8 +172,8 @@ namespace CHFFVRP_Solver
             foreach(var vehicle in vehicles)
             {
                 Console.WriteLine($"Vehicle {vehicle}");
-                Console.WriteLine(vehicle.Route);
-                Console.WriteLine(vehicle.Route.GetTotalDistance());
+                //Console.WriteLine(vehicle.Route);
+                //Console.WriteLine(vehicle.Route.GetTotalDistance());
                 OptimizeVehicleRoute(vehicle);
                 Console.WriteLine(vehicle.Route);
                 Console.WriteLine(vehicle.Route.GetTotalDistance());

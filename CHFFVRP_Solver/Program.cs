@@ -13,14 +13,15 @@ namespace CHFFVRP_Solver
             var problem = new Problem();
             Solution s = problem.GetInitialSolution();
             Console.WriteLine($"Initial result: {s}");
+            Console.WriteLine("#############################");
             s = problem.StartTabuSearch(s);
             watch.Stop();
             Console.WriteLine($"Result: {s}");
             Console.WriteLine($"Solving time: {watch.ElapsedMilliseconds}");
-            foreach(var vehicle in s.Vehicles)
-            {
-                Console.WriteLine(vehicle.Route);
-            }
+            //foreach(var vehicle in s.Vehicles)
+            //{
+            //    Console.WriteLine(vehicle.Route);
+            //}
             Console.ReadLine();
         }
     }

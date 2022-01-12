@@ -185,6 +185,10 @@ namespace CHFFVRP_Solver
                 {
                     return true;
                 }
+                if (v1 == v2)
+                {
+                    return true;
+                }
             }
             return false;
         }
