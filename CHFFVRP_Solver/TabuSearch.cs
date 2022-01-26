@@ -155,8 +155,9 @@ namespace CHFFVRP_Solver
                 try{
                     performMove(highest.V1, highest.V2, highest.Index1, highest.Index2);
                 }
-                catch
+                catch(Exception e)
                 {
+                    //Console.WriteLine(e.Message);
                 }
                 
                 tabuList.Add(highest);
@@ -185,10 +186,10 @@ namespace CHFFVRP_Solver
                 {
                     return true;
                 }
-                if (v1 == v2)
-                {
-                    return true;
-                }
+                //if (v1 == v2)
+                //{
+                //    return true;
+                //}
             }
             return false;
         }

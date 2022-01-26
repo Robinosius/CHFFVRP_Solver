@@ -59,9 +59,9 @@ namespace CHFFVRP_Solver
         List<int> q_j; //demand at node
         int[,] coordinates; //coordinates of nodes
         double[,] d; //distance btw nodes
-        List<int> v; //variable operation costs of vehicles
+        List<double> v; //variable operation costs of vehicles
         List<int> Q; //capacity of type k vehicles
-        List<int> e; //emission of vehicles per distance
+        List<double> e; //emission of vehicles per distance
         double ae; //upper limit for carb emissions
         double c; //net benefit of carbon trading
 
@@ -109,11 +109,11 @@ namespace CHFFVRP_Solver
             }
 
             tmp = input.GetRange(54,3);
-            v = tmp.Select(var => Int32.Parse(var.Split(" ")[1])).ToList();
+            v = tmp.Select(var => Double.Parse(var.Split(" ")[1])).ToList();
             tmp = input.GetRange(50,3);
             Q = tmp.Select(var => Int32.Parse(var.Split(" ")[1])).ToList();
             tmp = input.GetRange(58, 3);
-            e = tmp.Select(var => Int32.Parse(var.Split(" ")[1])).ToList();
+            e = tmp.Select(var => Double.Parse(var.Split(" ")[1])).ToList();
             ae = Double.Parse(input[62]);
             c = Double.Parse(input[64]);
 
@@ -128,7 +128,7 @@ namespace CHFFVRP_Solver
 
             twoOpt = new(d);
             threeOpt = new(d);
-            tabuSearch = new(150, 10, 30, twoOpt, threeOpt,
+            tabuSearch = new(150, 10, 45, twoOpt, threeOpt,
                 NeighborhoodGenerationMethod.Insert, Mode.Emission);
         }
         #endregion
@@ -147,13 +147,12 @@ namespace CHFFVRP_Solver
 
         public Solution GetInitialSolution()
         {
-            List<Node> sorted = nodes.OrderBy(var => var.Demand).ToList(); //customers sort by demand
+            List<Node> sorted = nodes.OrderBy(var => var.Demand).ToList();
             vehicles = vehicles.OrderBy(var => var.Capacity).ToList();
 
             while(sorted.Count() > 1) //last remaining node is the depot
             {
                 var nextCustomer = sorted.Last();
-                // infeasible
                 if(nextCustomer.Demand > vehicles.Last().Capacity)
                 {
                     Console.WriteLine("Problem infeasible: Max. vehicle capacity insufficient!");
@@ -171,12 +170,10 @@ namespace CHFFVRP_Solver
             }
             foreach(var vehicle in vehicles)
             {
-                Console.WriteLine($"Vehicle {vehicle}");
                 //Console.WriteLine(vehicle.Route);
                 //Console.WriteLine(vehicle.Route.GetTotalDistance());
                 OptimizeVehicleRoute(vehicle);
-                Console.WriteLine(vehicle.Route);
-                Console.WriteLine(vehicle.Route.GetTotalDistance());
+                Console.WriteLine($"Type:{vehicle.Type + 1} Route:{vehicle.Route}");
             }
             Solution s = new(vehicles, c, ae);
             return s;
