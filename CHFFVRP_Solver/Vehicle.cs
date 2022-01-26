@@ -11,16 +11,16 @@ namespace CHFFVRP_Solver
         private int type; // type = number for simplicity
         private int capacity; // total capacity of this vehicle depending on its type
         private int residualCapacity; // capacity left for this vehicle if it already serves customers;
-        private int emissions; // emissions per unit distance of this vehicle depending on its type
-        private int variableCosts; // variable cost per unit distance "" "" "" ""
-        private Tour route; // route this vehicle is currently serving, routes start with tour Depot-Depot for simplicity
+        private double emissions; // emissions per unit distance of this vehicle depending on its type
+        private double variableCosts; // variable cost per unit distance "" "" "" ""
+        private Route route; // route this vehicle is currently serving, routes start with tour Depot-Depot for simplicity
     
         public int Type { get => type; }
         public int Capacity { get => capacity; }
         public int ResidualCapacity { get => residualCapacity; }
-        public Tour Route { get => route; }
+        public Route Route { get => route; }
 
-        public Vehicle(int type, int capacity, int emissions, int variableCosts, Node depot)
+        public Vehicle(int type, int capacity, double emissions, double variableCosts, Node depot)
         {
             this.type = type;
             this.capacity = capacity;

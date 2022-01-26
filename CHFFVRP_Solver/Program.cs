@@ -17,11 +17,11 @@ namespace CHFFVRP_Solver
             s = problem.StartTabuSearch(s);
             watch.Stop();
             Console.WriteLine($"Result: {s}");
+            foreach(var vehicle in s.Vehicles)
+            {
+                Console.WriteLine($"Type:{vehicle.Type + 1} Route:{vehicle.Route}");
+            }
             Console.WriteLine($"Solving time: {watch.ElapsedMilliseconds}");
-            //foreach(var vehicle in s.Vehicles)
-            //{
-            //    Console.WriteLine(vehicle.Route);
-            //}
             Console.ReadLine();
         }
     }

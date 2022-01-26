@@ -80,7 +80,7 @@ namespace CHFFVRP_Solver
         public override string ToString()
         {
             string s =
-                $"Cost:{this.TotalCosts} Distance:{this.Distance} Emissions:{this.Emission}";
+                $"Cost:{this.TotalCosts}\nTradingSaldo:{this.TradingSaldo}\nDistance:{this.Distance}\nEmissions:{this.Emission}\n";
             return s;
         }
     }
